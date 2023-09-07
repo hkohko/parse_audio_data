@@ -6,6 +6,7 @@ __pycache__/
 Scripts/
 pyvenv.cfg
 *.wav
+*.mp3
 # C extensions
 *.so
 
