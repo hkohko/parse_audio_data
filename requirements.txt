@@ -1,1 +1,3 @@
 scipy==1.11.2
+pedalboard==0.7.9
+pyloudnorm==0.1.1
