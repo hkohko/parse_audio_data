@@ -10,6 +10,9 @@ filterwarnings("ignore")
 _MAIN_DIR = PurePath(__file__).parents[0]
 SAMPLE_DIR = _MAIN_DIR.joinpath("samples")
 
+if not Path(SAMPLE_DIR).exists():
+    Path(SAMPLE_DIR).mkdir()
+
 
 def read_wav(filename: str) -> tuple[int, ndarray, str]:
     file = _MAIN_DIR.joinpath(filename)
@@ -81,6 +84,10 @@ def basic_main(wav: tuple[int, ndarray, str]):
 
 
 if __name__ == "__main__":
-    for audio in Path(SAMPLE_DIR).iterdir():
-        r = read_wav(audio)
-        basic_main(r)
+    samples = [audio_file for audio_file in Path(SAMPLE_DIR).iterdir()]
+    if len(samples) == 0:
+        print(f"{SAMPLE_DIR} is empty. Drop your audio files there.")
+    else:
+        for file in samples:
+            r = read_wav(file)
+            basic_main(r)
