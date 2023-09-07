@@ -5,8 +5,7 @@ __pycache__/
 .idea
 Scripts/
 pyvenv.cfg
-*.wav
-*.mp3
+samples/
 # C extensions
 *.so
 
