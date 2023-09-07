@@ -1,3 +1,4 @@
+import numpy as np
 from pyloudnorm import meter
 from numpy import ndarray
 from pathlib import PurePath
@@ -9,11 +10,22 @@ filterwarnings("ignore")
 
 _MAIN_DIR = PurePath(__file__).parents[0]
 SAMPLE = _MAIN_DIR.joinpath("sample.wav")
+SAMPLE_2 = _MAIN_DIR.joinpath("sample2.mp3")
 
 
 def read_wav(filename: str) -> tuple[int, ndarray]:
-    wav = wavfile.read(_MAIN_DIR.joinpath(filename))
-    return wav
+    file = _MAIN_DIR.joinpath(filename)
+    file_path = str(file)
+
+    if file.suffix == ".wav":
+        wav = wavfile.read(file_path)
+        return wav
+
+    with AudioFile(file_path) as audio_file:
+        sr = audio_file.samplerate
+        data = audio_file.read(audio_file.frames)
+        reshaped_data = np.transpose(data)
+        return sr, reshaped_data
 
 
 def sample_rate(wav: tuple[int, ndarray]) -> int:
@@ -22,12 +34,6 @@ def sample_rate(wav: tuple[int, ndarray]) -> int:
 
 def audio_data(wav: tuple[int, ndarray]) -> ndarray:
     return wav[1]
-
-
-def wav_format(data: ndarray):
-    wav_format: str = data.dtype
-    max_value = data.min()
-    min_value = data.max()
 
 
 def audio_channel(data: ndarray) -> int:
@@ -56,4 +62,6 @@ def basic_main(wav: tuple[int, ndarray]):
 
 
 if __name__ == "__main__":
-    basic_main(read_wav(SAMPLE))
+    reads = [read_wav(SAMPLE), read_wav(SAMPLE_2)]
+    for r in reads:
+        basic_main(r)
